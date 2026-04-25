@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hết buồn nha 💖</title>
+
+<style>
+body {
+    font-family: Arial;
+    background: linear-gradient(135deg, #ffd6e7, #ffe6f0);
+    text-align: center;
+    padding: 30px;
+    overflow: hidden;
+}
+
+.box {
+    background: white;
+    padding: 25px;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 400px;
+    margin: auto;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+}
+
+textarea {
+    width: 100%;
+    height: 80px;
+    margin: 10px 0;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+button {
+    background: #ff66a3;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.result {
+    margin-top: 20px;
+    font-size: 18px;
+    color: #ff3399;
+}
+
+/* Tim bay */
+.heart {
+    position: fixed;
+    bottom: -10px;
+    font-size: 20px;
+    animation: floatUp 4s linear infinite;
+}
+
+@keyframes floatUp {
+    0% {transform: translateY(0) scale(1);}
+    100% {transform: translateY(-100vh) scale(1.5);}
+}
+</style>
+</head>
+
+<body>
+
+<div class="box">
+    <h2>Hôm nay bé buồn gì nè 🥺</h2>
+
+    <textarea id="feeling" placeholder="Viết nỗi buồn..."></textarea>
+
+    <h3>Chọn cách hết buồn 💕</h3>
+
+    <label><input type="checkbox" value="Ôm 🤗"> Ôm</label><br>
+    <label><input type="checkbox" value="Hun 😘"> Hun</label><br>
+    <label><input type="checkbox" value="dắt đi ăn kem 🍦"> Ăn kem</label><br>
+    <label><input type="checkbox" value="đi chơi 🎡"> Đi chơi</label><br>
+
+    <br><br>
+    <button onclick="submitData()">Xác nhận 💌</button>
+
+    <div class="result" id="result"></div>
+</div>
+
+<script>
+// 💖 Tim bay
+setInterval(() => {
+    let heart = document.createElement("div");
+    heart.className = "heart";
+    heart.innerHTML = "💖";
+    heart.style.left = Math.random() * 100 + "vw";
+    heart.style.fontSize = (10 + Math.random() * 20) + "px";
+    document.body.appendChild(heart);
+
+    setTimeout(() => heart.remove(), 4000);
+}, 300);
+
+// 📩 Gửi dữ liệu
+function submitData() {
+    let feeling = document.getElementById("feeling").value;
+    let choices = document.querySelectorAll("input[type=checkbox]:checked");
+
+    let selected = [];
+    choices.forEach(c => selected.push(c.value));
+
+    // 💌 Danh sách tin nhắn an ủi
+    let messages = [
+        "Không sao đâu, có anh ở đây rồi 💕,anh sẽ đạp bay snghi ngốc nghếch luôn, aisss dám làm embe của tui buồn cơ đấy 😤Buồn chút thôi rồi anh dắt đi ăn nha. Ngoan lại đây anh ôm cái hết buồn liền nàa 🤗, embe không được buồn lâu đâu, anh xót 🥺",
+    ];
+
+    // Random 1 câu
+    let randomMsg = messages[Math.floor(Math.random() * messages.length)];
+
+    // 📝 Hiển thị kết quả
+    let text = "<b>" + randomMsg + "</b><br><br>";
+    text += "Mai anh sẽ <br> bé haa";
+
+    if (selected.length === 0) {
+        text += "- Ôm em thật chặt luôn 🤗";
+    } else {
+        selected.forEach(s => text += "- " + s + "<br>");
+    }
+
+    document.getElementById("result").innerHTML = text;
+
+    // 📩 Gửi dữ liệu
+    fetch("YOUR_WEBHOOK_URL", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+            feeling: feeling,
+            solution: selected.join(", "),
+            message: randomMsg
+        })
+    });
+}
+</script>
+
+</body>
+</html>
